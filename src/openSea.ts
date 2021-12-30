@@ -4,12 +4,15 @@
  * @Autor: z.cejay@gmail.com
  * @Date: 2021-12-30 13:42:16
  * @LastEditors: cejay
- * @LastEditTime: 2021-12-30 22:10:07
+ * @LastEditTime: 2021-12-30 22:24:39
  */
 import { Web3Helper } from './utils/web3';
-
 import { MysqlHelper } from './utils/mysqlHelper';
 import { Utils } from './utils/utils';
+
+import {
+    Transaction
+} from 'web3-core';
 
 export class OpenSea {
     web3 = Web3Helper.getWeb3();
@@ -17,7 +20,22 @@ export class OpenSea {
     constructor() {
 
     }
+
     public async Run() {
+        while (true) {
+            try {
+                await this._Run();
+            } catch (error) {
+                console.error('OpenSea错误');
+                console.error(error);
+            }
+            Utils.sleep(1000 * 10);
+
+        }
+    }
+
+
+    public async _Run() {
         const address = '0x7Be8076f4EA4A4AD08075C2508e481d6C946D12b';
         const coin_abi = await Web3Helper.readABI('opensea');
         const coin_contract = new this.web3.eth.Contract(coin_abi, address);
@@ -42,12 +60,12 @@ export class OpenSea {
                 await Utils.sleep(1000 * 30);
                 continue;
             } else {
-                await Utils.sleep(100);
+                await Utils.sleep(1);
             }
 
             let fromBlock = strkey_intval + 1
-            if (toBlock - fromBlock > 100) {
-                toBlock = fromBlock + 100
+            if (toBlock - fromBlock > 20) {
+                toBlock = fromBlock + 20
             }
 
             const entries = await coin_contract.getPastEvents('OrdersMatched', {
@@ -55,13 +73,21 @@ export class OpenSea {
                 toBlock: toBlock
             });
             let transfer_list: string[] = [];
-            let promises: Promise<any>[] = [];
+            let promises: Promise<Transaction>[] = [];
             //Promise.all()
             for (let i = 0; i < entries.length; i++) {
                 const order = entries[i];
                 promises.push(this.web3.eth.getTransactionFromBlock(order.blockNumber, order.transactionIndex));
             }
-            const transactions = await Promise.all(promises);
+
+            let transactions: Transaction[] = [];
+            try {
+                transactions = await Promise.all(promises);
+            } catch (error) {
+                console.log(error);
+                break;
+            }
+
             for (let i = 0; i < entries.length; i++) {
                 const order = entries[i];
                 const _tx = order.transactionHash;

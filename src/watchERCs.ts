@@ -4,7 +4,7 @@
  * @Autor: z.cejay@gmail.com
  * @Date: 2021-12-30 11:42:36
  * @LastEditors: cejay
- * @LastEditTime: 2021-12-30 22:01:11
+ * @LastEditTime: 2021-12-30 22:17:05
  */
 
 
@@ -38,8 +38,32 @@ export class WatchERCs {
             }
         }
     }
-
     private async watchErc20(address: string, coin_name: string) {
+        while (true) {
+            try {
+                await this._watchErc20(address, coin_name);
+            } catch (error) {
+                console.error('watchErc20错误');
+                console.error(error);
+            }
+            Utils.sleep(1000 * 10);
+
+        }
+    }
+
+    private async watchErc721(address: string, coin_name: string) {
+        while (true) {
+            try {
+                await this._watchErc721(address, coin_name);
+            } catch (error) {
+                console.error('watchErc721错误');
+                console.error(error);
+            }
+            Utils.sleep(1000 * 10);
+
+        }
+    }
+    private async _watchErc20(address: string, coin_name: string) {
         const coin_abi = await Web3Helper.readABI('erc20');
         const coin_contract = new this.web3.eth.Contract(coin_abi, address);
 
@@ -96,7 +120,7 @@ export class WatchERCs {
         }
     }
 
-    private async watchErc721(address: string, coin_name: string) {
+    private async _watchErc721(address: string, coin_name: string) {
         const coin_abi = await Web3Helper.readABI('erc721');
         const coin_contract = new this.web3.eth.Contract(coin_abi, address);
 
