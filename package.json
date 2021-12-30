@@ -1,0 +1,19 @@
+{
+  "scripts": { 
+    "start": "ts-node src/app.ts",
+    "build": "tsc && node dist/app.js",
+    "release": "tsc && javascript-obfuscator --config obfuscator.json dist/app.js --output release.js && node release.js"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.13",
+    "@types/mysql": "^2.15.20",
+    "javascript-obfuscator": "^3.0.0",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "fs-extra": "^10.0.0",
+    "mysql": "^2.18.1",
+    "web3": "^1.6.1"
+  }
+}
