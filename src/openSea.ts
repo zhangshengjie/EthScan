@@ -4,7 +4,7 @@
  * @Autor: z.cejay@gmail.com
  * @Date: 2021-12-30 13:42:16
  * @LastEditors: cejay
- * @LastEditTime: 2021-12-30 21:46:29
+ * @LastEditTime: 2021-12-30 22:10:07
  */
 import { Web3Helper } from './utils/web3';
 
@@ -41,11 +41,13 @@ export class OpenSea {
             if (toBlock <= strkey_intval) {
                 await Utils.sleep(1000 * 30);
                 continue;
+            } else {
+                await Utils.sleep(100);
             }
 
             let fromBlock = strkey_intval + 1
-            if (toBlock - fromBlock > 200) {
-                toBlock = fromBlock + 200
+            if (toBlock - fromBlock > 100) {
+                toBlock = fromBlock + 100
             }
 
             const entries = await coin_contract.getPastEvents('OrdersMatched', {
@@ -86,7 +88,7 @@ export class OpenSea {
             }
             strkey_intval = toBlock;
         }
-
+        console.log('opensea_ordersmatched 已停止');
 
     }
 }

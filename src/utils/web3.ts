@@ -4,7 +4,7 @@
  * @Autor: z.cejay@gmail.com
  * @Date: 2021-12-30 11:52:10
  * @LastEditors: cejay
- * @LastEditTime: 2021-12-30 12:51:21
+ * @LastEditTime: 2021-12-30 22:11:44
  */
 
 import Web3 from 'web3';
@@ -15,7 +15,7 @@ class Web3Helper {
 
     private static web3: Web3;
 
-    private static createWeb3(url = "http://192.168.100.216:8545") {
+    private static createWeb3(url = "ws://192.168.100.216:8546"/*"http://192.168.100.216:8545"*/) {
         if (!Web3Helper.web3) {
             Web3Helper.web3 = new Web3(url);
         }
